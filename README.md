@@ -1,5 +1,3 @@
-Certainly! Here's an updated `readme.md` file that uses `async/await`:
-
 ```markdown
 # Node.js SA-MP Server Query
 
@@ -54,3 +52,6 @@ This file provides three functions for querying SA-MP servers:
 ## Dependencies
 
 This module uses the `dgram` module for UDP communication.
+
+## Credit
+Simplified Query API for SAMP. Original JJJ4n's repo
