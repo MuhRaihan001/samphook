@@ -1,67 +1,56 @@
-# node-samp-query
+Certainly! Here's an updated `readme.md` file that uses `async/await`:
 
-Simplified Query API for SAMP
+```markdown
+# Node.js SA-MP Server Query
 
-```
-npm install samp-query
-```
+This Node.js module allows you to query SA-MP (San Andreas Multiplayer) game servers to retrieve information about players and server details. It includes the following files:
 
-#### Usage
+## Files
 
-**Available options**
+### `request.js`
 
-* host
-* port - default: 7777
-* timeout - default: 1000
+This file contains a function for sending SA-MP server queries using UDP. It takes an IP address, port, and an opcode as parameters to query the server. The available opcodes are:
 
-```
-var query = require('samp-query')
+- `'i'`: Retrieve server information.
+- `'r'`: Retrieve server rules.
+- `'d'`: Retrieve player list.
 
-var options = {
-	host: '94.23.166.205'
-}
+### `sa-mp.js`
 
-query(options, function (error, response) {
-	if(error)
-		console.log(error)
-	else 
-		console.log(response)
-})
-```
+This file provides three functions for querying SA-MP servers:
 
-#### Sample output
-```
-{ 
-	address: '94.23.166.205',
-	hostname: '• German Extreme Freeroam • Stunt/Derby/Race/DM/Free',
-	gamemode: 'Stunt Race Derby DM Fun',
-	mapname: 'San Andreas',
-	passworded: false,
-	maxplayers: 500,
-	online: 12,
-	rules: { 
-		lagcomp: true,
-		mapname: 'San Andreas',
-		version: '0.3z',
-		weather: 18,
-		weburl: 'www.gef.io',
-		worldtime: '12:00'
-	},
-	players: [
-		{ id: 0, name: 'hallihallomine', score: 14735, ping: 51 },
-		{ id: 1, name: 'xGreenDayx', score: 26193, ping: 81 },
-		{ id: 2, name: '[Black]Rider', score: 87211, ping: 41 },
-		{ id: 3, name: 'Kohl', score: 439313, ping: 45 },
-		{ id: 5, name: 'TheSituation', score: 14775, ping: 41 },
-		{ id: 6, name: 'EziT', score: 38914, ping: 66 },
-		{ id: 7, name: 'Josiee', score: 2104, ping: 56 },
-		{ id: 8, name: 'Derbystar', score: 29, ping: 56 },
-		{ id: 9, name: 'xXProPlayXx', score: 20354, ping: 45 },
-		{ id: 10, name: 'hakco30', score: 0, ping: 81 },
-		{ id: 11, name: 'xXDarkBolleXx', score: 38886, ping: 56 },
-		{ id: 12, name: 'SDMPro', score: 0, ping: 51 }
-	]
-}
-```
+1. `async function listPlayer(ip, port)`: Queries the server for the list of players and returns an array of player objects or a failed status if there are no players or an error occurs.
 
+2. `async function serverInformation(ip, port)`: Queries the server for general server information and returns an object containing server details.
 
+3. `async function sampServers(ip, port, method)`: Combines the above two functions to query either player list or server information based on the specified method. It returns the respective data or an error if one occurs.
+
+## Usage
+
+1. Import the module:
+   ```javascript
+   const { sampServers } = require('./sa-mp');
+   ```
+
+2. Use the functions to query SA-MP servers using `async/await`:
+   ```javascript
+   try {
+     const players = await sampServers('server-ip', server-port, 'player');
+     console.log('Player list:', players);
+   } catch (error) {
+     console.error('Error:', error);
+   }
+   ```
+
+   ```javascript
+   try {
+     const serverInfo = await sampServers('server-ip', server-port, 'info');
+     console.log('Server information:', serverInfo);
+   } catch (error) {
+     console.error('Error:', error);
+   }
+   ```
+
+## Dependencies
+
+This module uses the `dgram` module for UDP communication.
