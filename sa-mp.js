@@ -1,51 +1,37 @@
-const request = require('./samp/request')
+const request = require('./samp/request');
 
-async function listPlayer(ip, port){
-    const player = await request(ip, port, 'd')
-    return new Promise((resolve, reject) =>{
-        try{
-            if(player === undefined){
-                resolve(JSON.stringify({ status: "failed" }));
-            } else if(player.length === 0){
-                resolve(JSON.stringify({ status: "failed" }));
-            } else {
-                resolve(player);
-            }
-        } catch(error){
-            reject(error);
+async function listPlayer(ip, port) {
+    try {
+        const player = await request(ip, port, 'd');
+        if (!player || player.length === 0) {
+            return JSON.stringify({ status: "failed" });
         }
-    });
-}
-async function serverInformation(ip, port){
-    const server = await request(ip, port, 'i')
-    return new Promise((resolve, reject) =>{
-        try{
-            resolve(server)
-        }catch(error){
-            reject(error);
-        }
-    })
+        return player;
+    } catch (error) {
+        throw error;
+    }
 }
 
-async function sampServers(ip, port, method){
-    const players = await listPlayer(ip, port);
-    const information = await serverInformation(ip, port);
-    return new Promise((resolve, reject) =>{
-        try{
-            switch(method){
-                case "player":{
-                    resolve(players)
-                    break
-                }
-                case "info":{
-                    resolve(information)
-                    break
-                }
-            }
-        }catch(error){
-            reject(error);
-        }
-    })
+async function serverInformation(ip, port) {
+    try {
+        return await request(ip, port, 'i');
+    } catch (error) {
+        throw error;
+    }
 }
 
-module.exports = { sampServers }
+async function sampServers(ip, port, method) {
+    try {
+        if (method === "player") {
+            return await listPlayer(ip, port);
+        } else if (method === "info") {
+            return await serverInformation(ip, port);
+        } else {
+            throw new Error("Invalid method");
+        }
+    } catch (error) {
+        throw error;
+    }
+}
+
+module.exports = { sampServers };
